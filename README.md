@@ -11,9 +11,9 @@ Get location from Node.js request object
 
 ## Usage
 
-```javasccript
+```javascript
 var locat = require('locat')
-var http = require('http)
+var http = require('http')
 
 http.createServer(function (request, response) {
   var location = locat(request)
