@@ -15,49 +15,37 @@ describe('Without proxy', function () {
     server.close(done)
   })
 
-  it('http://localhost/', function (done) {
+  it('http://localhost:3000/', function (done) {
     server = http.createServer(middleware)
-    server.listen(80, function (error) {
+    server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://localhost/', function (error, response, body) {
+      request('http://localhost:3000/', function (error, response, body) {
         if (error) return done(error)
-        body.should.equal('http://localhost/')
+        body.should.equal('http://localhost:3000/')
         done()
       })
     })
   })
 
-  it('http://localhost:8080/', function (done) {
+  it('http://foo:bar@localhost:3000/', function (done) {
     server = http.createServer(middleware)
-    server.listen(8080, function (error) {
+    server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://localhost:8080/', function (error, response, body) {
+      request('http://foo:bar@localhost:3000/', function (error, response, body) {
         if (error) return done(error)
-        body.should.equal('http://localhost:8080/')
+        body.should.equal('http://foo:bar@localhost:3000/')
         done()
       })
     })
   })
 
-  it('http://foo:bar@localhost/', function (done) {
+  it('http://localhost:3000/foo?bar', function (done) {
     server = http.createServer(middleware)
-    server.listen(80, function (error) {
+    server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://foo:bar@localhost/', function (error, response, body) {
+      request('http://localhost:3000/foo?bar', function (error, response, body) {
         if (error) return done(error)
-        body.should.equal('http://foo:bar@localhost/')
-        done()
-      })
-    })
-  })
-
-  it('http://localhost/foo?bar', function (done) {
-    server = http.createServer(middleware)
-    server.listen(80, function (error) {
-      if (error) return done(error)
-      request('http://localhost/foo?bar', function (error, response, body) {
-        if (error) return done(error)
-        body.should.equal('http://localhost/foo?bar')
+        body.should.equal('http://localhost:3000/foo?bar')
         done()
       })
     })
