@@ -1,0 +1,32 @@
+{
+  "name": "locat",
+  "version": "0.1.0",
+  "description": "Get location from Node.js request object.",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && mocha --require should test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gerhut/locat.git"
+  },
+  "keywords": [
+    "request",
+    "http"
+  ],
+  "author": "George Chung (http://gerhut.me/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gerhut/locat/issues"
+  },
+  "homepage": "https://github.com/Gerhut/locat#readme",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.0",
+    "request": "^2.75.0",
+    "should": "^11.1.0",
+    "standard": "^8.3.0"
+  }
+}
