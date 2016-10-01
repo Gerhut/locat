@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var http = require('http')
+var connect = require('connect')
 var request = require('request')
 var locat = require('./')
 
@@ -45,6 +46,20 @@ describe('Without proxy', function () {
 
   it('http://localhost:3000/foo?bar', function (done) {
     server = http.createServer(untrusted)
+    server.listen(3000, function (error) {
+      if (error) return done(error)
+      request('http://localhost:3000/foo?bar', function (error, response, body) {
+        if (error) return done(error)
+        body.should.equal('http://localhost:3000/foo?bar')
+        done()
+      })
+    })
+  })
+
+  it('http://localhost:3000/foo?bar with connect', function (done) {
+    var app = connect()
+    app.use('/foo', untrusted)
+    server = http.createServer(app)
     server.listen(3000, function (error) {
       if (error) return done(error)
       request('http://localhost:3000/foo?bar', function (error, response, body) {
