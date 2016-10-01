@@ -5,21 +5,11 @@ var request = require('request')
 var locat = require('./')
 
 var untrusted = function (request, response) {
-  try {
-    return response.end(locat(request, false))
-  } catch (e) {
-    response.status = 500
-    return response.end(e.stack)
-  }
+  return response.end(locat(request, false))
 }
 
 var trusted = function (request, response) {
-  try {
-    return response.end(locat(request))
-  } catch (e) {
-    response.status = 500
-    return response.end(e.stack)
-  }
+  return response.end(locat(request))
 }
 
 var server
