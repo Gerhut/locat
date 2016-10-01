@@ -1,6 +1,7 @@
 # locat
 
 [![Build Status](https://travis-ci.org/Gerhut/locat.svg?branch=master)](https://travis-ci.org/Gerhut/locat)
+[![codecov](https://codecov.io/gh/Gerhut/locat/branch/master/graph/badge.svg)](https://codecov.io/gh/Gerhut/locat)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 Get location from Node.js request object

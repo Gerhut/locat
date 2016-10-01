@@ -4,3 +4,6 @@ node_js:
   - "0.12"
   - "4"
   - "6"
+after_success:
+  - npm run cov
+  - bash <(curl -s https://codecov.io/bash)

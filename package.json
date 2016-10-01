@@ -4,7 +4,8 @@
   "description": "Get location from Node.js request object.",
   "main": "index.js",
   "scripts": {
-    "test": "standard && mocha --require should test"
+    "test": "standard && mocha --require should test",
+    "cov": "istanbul cover _mocha -- --require should test"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "node": ">=0.10"
   },
   "devDependencies": {
+    "istanbul": "^0.4.5",
     "mocha": "^3.1.0",
     "request": "^2.75.0",
     "should": "^11.1.0",
