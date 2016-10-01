@@ -8,11 +8,15 @@ module.exports = function (request, trustProxy) {
     trustProxy = !!trustProxy
   }
 
+  return getOrigin(request, trustProxy) + getPathname(request, trustProxy)
+}
+
+function getOrigin (request, trustProxy) {
   return url.format({
     protocol: getProtool(request, trustProxy),
     auth: getAuth(request),
     host: getHost(request, trustProxy)
-  }) + getPathname(request, trustProxy) // Prevent auto encoding
+  })
 }
 
 function getProtool (request, trustProxy) {
