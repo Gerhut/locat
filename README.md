@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/Gerhut/locat.svg?branch=master)](https://travis-ci.org/Gerhut/locat)
 [![codecov](https://codecov.io/gh/Gerhut/locat/branch/master/graph/badge.svg)](https://codecov.io/gh/Gerhut/locat)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![dependencies Status](https://david-dm.org/Gerhut/locat/status.svg)](https://david-dm.org/Gerhut/locat)
+[![devDependencies Status](https://david-dm.org/Gerhut/locat/dev-status.svg)](https://david-dm.org/Gerhut/locat?type=dev)
 
 Get location from Node.js request object
 
