@@ -107,6 +107,7 @@ function decodeBase64 (string) {
   if (typeof Buffer.from === 'function') {
     return Buffer.from(string, 'base64').toString()
   } else {
+    // eslint-disable-next-line node/no-deprecated-api
     return new Buffer(string, 'base64').toString()
   }
 }
