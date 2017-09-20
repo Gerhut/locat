@@ -2,15 +2,20 @@
 
 var http = require('http')
 var connect = require('connect')
-var request = require('request')
 var locat = require('./')
 
 var untrusted = function (request, response) {
-  return response.end(locat(request, false))
+  response.writeHead(204, {
+    'x-locat': locat(request, false)
+  })
+  response.end()
 }
 
 var trusted = function (request, response) {
-  return response.end(locat(request))
+  response.writeHead(204, {
+    'x-locat': locat(request)
+  })
+  response.end()
 }
 
 var server
@@ -24,11 +29,12 @@ describe('Without proxy', function () {
     server = http.createServer(untrusted)
     server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://localhost:3000/', function (error, response, body) {
-        if (error) return done(error)
-        body.should.equal('http://localhost:3000/')
+      http.get('http://localhost:3000/', function (response) {
+        response.headers.should.have.property(
+          'x-locat', 'http://localhost:3000/')
+        response.read()
         done()
-      })
+      }).on('error', done)
     })
   })
 
@@ -36,11 +42,12 @@ describe('Without proxy', function () {
     server = http.createServer(untrusted)
     server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://foo:bar@localhost:3000/', function (error, response, body) {
-        if (error) return done(error)
-        body.should.equal('http://foo:bar@localhost:3000/')
+      http.get('http://foo:bar@localhost:3000/', function (response) {
+        response.headers.should.have.property(
+          'x-locat', 'http://foo:bar@localhost:3000/')
+        response.read()
         done()
-      })
+      }).on('error', done)
     })
   })
 
@@ -48,11 +55,12 @@ describe('Without proxy', function () {
     server = http.createServer(untrusted)
     server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://localhost:3000/foo?bar', function (error, response, body) {
-        if (error) return done(error)
-        body.should.equal('http://localhost:3000/foo?bar')
+      http.get('http://localhost:3000/foo?bar', function (response) {
+        response.headers.should.have.property(
+          'x-locat', 'http://localhost:3000/foo?bar')
+        response.read()
         done()
-      })
+      }).on('error', done)
     })
   })
 
@@ -62,11 +70,12 @@ describe('Without proxy', function () {
     server = http.createServer(app)
     server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://localhost:3000/foo?bar', function (error, response, body) {
-        if (error) return done(error)
-        body.should.equal('http://localhost:3000/foo?bar')
+      http.get('http://localhost:3000/foo?bar', function (response) {
+        response.headers.should.have.property(
+          'x-locat', 'http://localhost:3000/foo?bar')
+        response.read()
         done()
-      })
+      }).on('error', done)
     })
   })
 })
@@ -76,15 +85,18 @@ describe('With untrusted proxy', function () {
     server = http.createServer(untrusted)
     server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://localhost:3000/', {
+      http.get({
+        hostname: 'localhost',
+        port: 3000,
         headers: {
           'x-forwarded-proto': 'https'
         }
-      }, function (error, response, body) {
-        if (error) return done(error)
-        body.should.equal('http://localhost:3000/')
+      }, function (response) {
+        response.headers.should.have.property(
+          'x-locat', 'http://localhost:3000/')
+        response.read()
         done()
-      })
+      }).on('error', done)
     })
   })
 
@@ -92,15 +104,18 @@ describe('With untrusted proxy', function () {
     server = http.createServer(untrusted)
     server.listen(3000, function (error) {
       if (error) return done(error)
-      request('http://localhost:3000/', {
+      http.get({
+        hostname: 'localhost',
+        port: 3000,
         headers: {
           'x-forwarded-host': 'example.com'
         }
-      }, function (error, response, body) {
-        if (error) return done(error)
-        body.should.equal('http://localhost:3000/')
+      }, function (response) {
+        response.headers.should.have.property(
+          'x-locat', 'http://localhost:3000/')
+        response.read()
         done()
-      })
+      }).on('error', done)
     })
   })
 })
@@ -111,15 +126,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'x-forwarded-proto': 'https'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://localhost:3000/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://localhost:3000/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -127,15 +145,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'x-forwarded-proto': 'https,http,https'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://localhost:3000/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://localhost:3000/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -143,15 +164,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'front-end-https': 'on'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://localhost:3000/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://localhost:3000/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -159,15 +183,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'x-forwarded-ssl': 'on'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://localhost:3000/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://localhost:3000/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -175,15 +202,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'x-url-scheme': 'https'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://localhost:3000/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://localhost:3000/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -191,15 +221,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'x-forwarded-host': 'example.com'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('http://example.com/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'http://example.com/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
   })
@@ -209,15 +242,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'forwarded': 'host=example.com'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('http://example.com/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'http://example.com/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -225,15 +261,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'forwarded': ['host=example.com', 'host=example.net']
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('http://example.com/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'http://example.com/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -241,15 +280,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'forwarded': 'host=example.com, host=example.net'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('http://example.com/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'http://example.com/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -257,15 +299,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'forwarded': 'proto=https'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://localhost:3000/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://localhost:3000/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -273,15 +318,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'forwarded': ['proto=https', 'proto=http']
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://localhost:3000/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://localhost:3000/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -289,15 +337,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'forwarded': 'proto=https;host=example.com'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://example.com/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://example.com/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
 
@@ -305,15 +356,18 @@ describe('With trusted proxy', function () {
       server = http.createServer(trusted)
       server.listen(3000, function (error) {
         if (error) return done(error)
-        request('http://localhost:3000/', {
+        http.get({
+          hostname: 'localhost',
+          port: 3000,
           headers: {
             'forwarded': 'proto=https, host=example.com'
           }
-        }, function (error, response, body) {
-          if (error) return done(error)
-          body.should.equal('https://example.com/')
+        }, function (response) {
+          response.headers.should.have.property(
+            'x-locat', 'https://example.com/')
+          response.read()
           done()
-        })
+        }).on('error', done)
       })
     })
   })
