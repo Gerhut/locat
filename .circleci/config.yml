@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  "0.10":
+    docker:
+      - image: node:0.10
+    steps: &steps
+      - npm install
+      - npm test
+      - bash <(curl -s https://codecov.io/bash)
+  "0.12":
+    docker:
+      - image: node:0.12
+    steps: *steps
+  argon:
+    docker:
+      - image: node:argon
+    steps: *steps
+  boron:
+    docker:
+      - image: node:boron
+    steps: *steps
