@@ -14,8 +14,8 @@ module.exports = function (request, trustProxy) {
 
 function getOrigin (request, trustProxy) {
   var forwarded = null
-  if (trustProxy && request.headers['forwarded'] != null) {
-    forwarded = parseForwarded(request.headers['forwarded'])
+  if (trustProxy && request.headers.forwarded != null) {
+    forwarded = parseForwarded(request.headers.forwarded)
   }
   return url.format({
     protocol: getProtool(request, trustProxy, forwarded),
@@ -56,7 +56,7 @@ function getProtool (request, trustProxy, forwarded) {
 }
 
 function getAuth (request) {
-  var authHeader = request.headers['authorization']
+  var authHeader = request.headers.authorization
   if (authHeader == null) return
   var authParts = authHeader.match(/^(.+?)\s(.+)$/)
   if (authParts == null) return
@@ -72,7 +72,7 @@ function getHost (request, trustProxy, forwarded) {
   if (trustProxy && request.headers['x-forwarded-host'] != null) {
     return request.headers['x-forwarded-host']
   }
-  return request.headers['host'] || null
+  return request.headers.host || null
 }
 
 function getPathname (request) {

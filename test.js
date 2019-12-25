@@ -256,7 +256,7 @@ exports['With trusted proxy'] = {
           hostname: 'localhost',
           port: 3000,
           headers: {
-            'forwarded': 'host=example.com'
+            forwarded: 'host=example.com'
           }
         }, function (response) {
           test.strictEqual(
@@ -276,7 +276,7 @@ exports['With trusted proxy'] = {
           hostname: 'localhost',
           port: 3000,
           headers: {
-            'forwarded': ['host=example.com', 'host=example.net']
+            forwarded: ['host=example.com', 'host=example.net']
           }
         }, function (response) {
           test.strictEqual(
@@ -296,7 +296,7 @@ exports['With trusted proxy'] = {
           hostname: 'localhost',
           port: 3000,
           headers: {
-            'forwarded': 'host=example.com, host=example.net'
+            forwarded: 'host=example.com, host=example.net'
           }
         }, function (response) {
           test.strictEqual(
@@ -316,7 +316,7 @@ exports['With trusted proxy'] = {
           hostname: 'localhost',
           port: 3000,
           headers: {
-            'forwarded': 'proto=https'
+            forwarded: 'proto=https'
           }
         }, function (response) {
           test.strictEqual(
@@ -336,7 +336,7 @@ exports['With trusted proxy'] = {
           hostname: 'localhost',
           port: 3000,
           headers: {
-            'forwarded': ['proto=https', 'proto=http']
+            forwarded: ['proto=https', 'proto=http']
           }
         }, function (response) {
           test.strictEqual(
@@ -356,7 +356,7 @@ exports['With trusted proxy'] = {
           hostname: 'localhost',
           port: 3000,
           headers: {
-            'forwarded': 'proto=https;host=example.com'
+            forwarded: 'proto=https;host=example.com'
           }
         }, function (response) {
           test.strictEqual(
@@ -376,7 +376,7 @@ exports['With trusted proxy'] = {
           hostname: 'localhost',
           port: 3000,
           headers: {
-            'forwarded': 'proto=https, host=example.com'
+            forwarded: 'proto=https, host=example.com'
           }
         }, function (response) {
           test.strictEqual(
