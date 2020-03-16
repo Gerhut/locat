@@ -1,6 +1,5 @@
 # locat
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/Gerhut/locat.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/Gerhut/locat.svg?branch=master)](https://travis-ci.org/Gerhut/locat)
 [![codecov](https://codecov.io/gh/Gerhut/locat/branch/master/graph/badge.svg)](https://codecov.io/gh/Gerhut/locat)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
